@@ -1,31 +1,32 @@
 {% extends 'base.html' %}
 {% load my_tags %}
 {% block content %}
-<div class="row text-center">
-    {% for product in object_list %}
-    <div class="col-4">
-        <div class="card mb-4 box-shadow">
-            <div class="card-header">
+<div class="container mt-3">
+    <div class="row text-center">
+        {% for product in object_list %}
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 box-shadow">
                 {% if product.imagery %}
-                <img src="{{ product.imagery | media_filter }}">
+                <img src="{{ product.imagery | media_filter }}" class="card-img-top">
                 {% endif %}
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{ product.category}}</h4>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.product_name }}</h5>
+                    <p class="card-text">{{ product.product_description | truncatewords:10 }}</p>
+                    <div class="card-footer">
+                        <small class="text-muted">Категория: {{ product.category }}</small>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Цена: {{ product.cost_product }} руб.</small>
+                    </div>
+                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary">Посмотреть</a>
                 </div>
-                <h4 class="my-0 font-weight-normal">{{ product.product_name }}</h4>
-                <h4 class="my-0 font-weight-normal">{{ product.product_description | truncatewords:10 }}</h4>
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Цена {{ product.cost_product }} </h4>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <a class="btn btn-primary" role="button"
-                   href="{% url 'catalog:product_detail' product.pk %}">Посмотреть</a>
-
             </div>
         </div>
+        {% empty %}
+        <div class="col-12">
+            <p>Продукты отсутствуют.</p>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
