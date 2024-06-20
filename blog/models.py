@@ -12,6 +12,10 @@ class Blog(models.Model):
     published = models.BooleanField(default=True, verbose_name='опубликован')
     views = models.PositiveIntegerField(default=0, verbose_name='просмотры')
 
+    def save(self, *args, **kwargs):
+        if self.views is not None and self.views < 0:
+            self.views = 0
+        super(Blog, self).save(*args, **kwargs)
     def __str__(self):
         return self.title
 
