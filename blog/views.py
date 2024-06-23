@@ -4,6 +4,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 
 from blog.models import Blog
 
+
 class BlogCreateView(CreateView):
     model = Blog
     fields = ('title', 'content', 'preview')
@@ -12,6 +13,7 @@ class BlogCreateView(CreateView):
     def form_valid(self, form):
         form.instance.slug = slugify(form.instance.title)
         return super().form_valid(form)
+
 
 class BlogUpdateView(UpdateView):
     model = Blog
@@ -24,11 +26,13 @@ class BlogUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('blog:view', args=[self.object.pk])
 
+
 class BlogListView(ListView):
     model = Blog
 
     def get_queryset(self):
         return super().get_queryset().filter(published=True)
+
 
 class BlogDetailView(DetailView):
     model = Blog
@@ -39,6 +43,7 @@ class BlogDetailView(DetailView):
         self.object.views += 1
         self.object.save()
         return super().get(request, *args, **kwargs)
+
 
 class BlogDeleteView(DeleteView):
     model = Blog

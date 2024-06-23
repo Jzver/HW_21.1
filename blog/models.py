@@ -16,6 +16,7 @@ class Blog(models.Model):
         if self.views is not None and self.views < 0:
             self.views = 0
         super(Blog, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
