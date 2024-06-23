@@ -25,14 +25,13 @@ class Product(models.Model):
     preview = models.ImageField(upload_to='products_foto', verbose_name='Изображение', **NULLABLE)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True)
     price = models.IntegerField(verbose_name='Цена')
-    date_of_creation = models.DateField(auto_now_add=True, verbose_name='Дата создания')
+    created_at = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     last_modified_date = models.DateField(auto_now=True, verbose_name='Дата изменения')
 
     view_counter = models.PositiveIntegerField(verbose_name='Счетчик просмотров',
                                                help_text="Укажите количество просмотров",
                                                default=0)
 
-    #
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
