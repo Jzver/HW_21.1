@@ -14,7 +14,7 @@ class ProductListView(ListView):
         context = super().get_context_data(**kwargs)
         for product in context['object_list']:
             try:
-                current_version = Version.objects.filter(product=product, is_current_version=True).latest('id')
+                current_version = Version.objects.filter(product=product, is_current=True).latest('id')  # Исправлено имя поля
                 product.current_version = current_version
             except Version.DoesNotExist:
                 product.current_version = None

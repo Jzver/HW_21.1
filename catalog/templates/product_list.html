@@ -6,17 +6,17 @@
         {% for product in object_list %}
         <div class="col-md-4 mb-3">
             <div class="card h-100 box-shadow">
-                {% if product.imagery %}
-                <img src="{{ product.imagery | media_filter }}" class="card-img-top">
+                {% if product.preview %}
+                <img src="{{ product.preview | media_filter }}" class="card-img-top">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ product.product_name }}</h5>
-                    <p class="card-text">{{ product.product_description | truncatewords:10 }}</p>
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description | truncatewords:10 }}</p>
                     <div class="card-footer">
                         <small class="text-muted">Категория: {{ product.category }}</small>
                     </div>
                     <div class="card-footer">
-                        <small class="text-muted">Цена: {{ product.cost_product }} руб.</small>
+                        <small class="text-muted">Цена: {{ product.price }} руб.</small>
                     </div>
                     <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary">Посмотреть</a>
                 </div>

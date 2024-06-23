@@ -1,25 +1,49 @@
-from django import forms
 from django.core.exceptions import ValidationError
-from .models import Product
+from django.forms import ModelForm, BooleanField
+
+from catalog.models import Product, Version
 
 
-class ProductForm(forms.ModelForm):
+class StyleFormMixin:
+    """Класс для стилизации форм"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+
+            if isinstance(field, BooleanField):
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+
+
+class ProductForm(StyleFormMixin, ModelForm):
+    """Класс для создание форм для модели Продукт"""
+    banned_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
+
     class Meta:
         model = Product
-        fields = ['product_name', 'product_description', 'imagery', 'category', 'cost_product']
+        fields = ('name', 'description', 'preview', 'category', 'price')
 
-    def clean_product_name(self):
-        product_name = self.cleaned_data['product_name']
-        forbidden_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция',
-                           'радар']
-        if any(word in product_name.lower() for word in forbidden_words):
-            raise ValidationError('Название продукта содержит запрещенные слова.')
-        return product_name
+    def clean_name(self):
+        """Метод для проверки валидации имени Продукта при создании нового объекта"""
+        cleaned_data = self.cleaned_data['name']
+        if cleaned_data.lower() in self.banned_words:
+            raise ValidationError(f'Слова, запрещенные к использованию в названии продукта: '
+                                  f'{str(self.banned_words)[1:-2]}')
+        return cleaned_data
 
-    def clean_product_description(self):
-        product_description = self.cleaned_data['product_description']
-        forbidden_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция',
-                           'радар']
-        if any(word in product_description.lower() for word in forbidden_words):
-            raise ValidationError('Описание продукта содержит запрещенные слова.')
-        return product_description
+    def clean_description(self):
+        """Метод для проверки валидации описания Продукта при создании нового объекта"""
+        cleaned_data = self.cleaned_data['description']
+        if cleaned_data.lower() in self.banned_words:
+            raise ValidationError(f'Слова, запрещенные к использованию в описании продукта: '
+                                  f'{str(self.banned_words)[1:-2]}')
+        return cleaned_data
+
+
+class VersionForm(StyleFormMixin, ModelForm):
+    class Meta:
+        model = Version
+        fields = ('id', 'product', 'name', 'number', 'is_current')
